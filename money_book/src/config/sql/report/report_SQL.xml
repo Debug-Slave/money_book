@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="reportMapper">
+	
+	<select id="selectOutgoingCategorySum" resultType="hashMap" parameterType="hashMap">
+		SELECT c.cate_name AS cateName, c.cate_code AS cateCode, IFNULL(o.sum, 0) AS amount
+		FROM 
+			tb_outgoing_category c LEFT JOIN 
+		    (
+				SELECT SUM(his_money) AS sum, cate_code FROM tb_outgoing 
+		        WHERE user_idx = #{userIdx}
+		        	AND his_stat = 1
+					AND his_date BETWEEN #{startDate} AND #{endDate}
+		        GROUP BY cate_code
+			) o
+		    ON c.cate_code = o.cate_code
+		ORDER BY 
+		c.cate_order ASC
+	</select>
+	
+    <select id="selectIncomeCategorySum" resultType="hashMap" parameterType="hashMap">
+		SELECT c.cate_name AS cateName, c.cate_code AS cateCode, IFNULL(i.sum, 0) AS amount
+		FROM 
+			tb_income_category c LEFT JOIN 
+		    (
+				SELECT SUM(his_money) AS sum, cate_code FROM tb_income 
+		        WHERE user_idx = #{userIdx}
+		        	AND his_stat = 1
+					AND his_date BETWEEN #{startDate} AND #{endDate}
+		        GROUP BY cate_code
+			) i
+		    ON c.cate_code = i.cate_code
+		ORDER BY 
+		c.cate_order ASC;
+	</select>
+	
+	<select id="selectOutgoingTypeSum" resultType="hashMap" parameterType="hashMap">
+		SELECT 
+			SUM(his_money) AS amout, his_type AS hisType FROM tb_outgoing 
+		WHERE user_idx = #{userIdx}
+        	AND his_stat = 1
+			AND his_date BETWEEN #{startDate} AND #{endDate}
+		GROUP BY his_type
+	</select>
+	
+	
+</mapper>

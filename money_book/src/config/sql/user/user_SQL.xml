@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="userMapper">
+	
+	<resultMap id="user" type="com.debugslave.moneybook.core.user.UserVO">
+		<result property="userIdx" column="user_idx"/>
+		<result property="userId" column="user_id"/>
+		<result property="userName" column="user_name"/>
+		<result property="userPassword" column="user_password"/>
+		<result property="passSalt" column="pass_salt"/>
+		<result property="regDt" column="reg_dt"/>
+		<result property="recentLoginDt" column="recent_login_dt"/>
+		<result property="userStat" column="user_stat"/>
+	</resultMap>
+	
+	
+	<select id="selectUserInfoById" resultMap="user" parameterType="userVO">
+		SELECT 
+			user_idx, user_id,user_name, reg_dt, user_stat, user_password, pass_salt 
+		FROM 
+			tb_user
+		WHERE 
+			user_stat = 1
+			AND user_id = #{userId}
+		LIMIT 0, 1
+	</select>
+	
+    <insert id="insertUserInfo" parameterType="userVO">
+    	INSERT INTO 
+    		tb_user (user_idx, user_id, user_name, reg_dt, user_stat, user_password, pass_salt) 
+    	VALUES
+    		(0, #{userId}, #{userName}, NOW(), 1, #{userPassword}, #{passSalt})
+    </insert>
+
+</mapper>

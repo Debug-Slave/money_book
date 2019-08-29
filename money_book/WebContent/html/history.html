@@ -1,0 +1,194 @@
+<div class='panel col-md-12' id="calendarWrapper">
+	<div class='panel-body'>
+		<div class="col-md-12">
+			<div id='calendar'></div>
+		</div>
+	</div>                    
+</div>
+
+
+<div class='panel col-md-4 infoPanel' id="historyInfo" style="display: none;">
+	<div class='panel-body'>
+		<div class="col-md-12">
+		<div class="panel panel-header">
+			<div class="panel-heading" style="color:white !important;">
+				<h4>히스토리 인포</h4>
+			</div>
+			<div class="panel-body">
+				<table class="table table-striped table-bordered">
+					<colgroup>
+						<col style="width: 100px;"/>
+						<col />
+					</colgroup>
+					<tr>
+						<th>카테고리</th>
+						<td class="categoryName"></td>					
+					</tr>
+					<tr class="hisTypeRow">
+						<th>사용 종류</th>
+						<td class="hisType"></td>					
+					</tr>
+					<tr>
+						<th>금액</th>
+						<td class="hisMoney"></td>					
+					</tr>
+					<tr>
+						<th>사용일</th>
+						<td class="hisDate"></td>					
+					</tr>
+					<tr>
+						<th colspan="2" style="text-align: left; padding-left: 10px;">메모</th>
+					</tr>
+					<tr>
+						<td colspan="2" class="hisMemo"></td>
+					</tr>
+				</table>
+				<div style="text-align: right;">
+					<button hIdx="0" class="btn btn-danger btn-xs delBtn" onclick="delHistory(this);">삭제</button>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+</div>
+
+<div class='panel col-md-4 infoPanel' id="historyDayList" style="display: none;">
+	<div class='panel-body'>
+		<div class="col-md-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4>일자별 정보</h4>
+			</div>
+			<div class="panel-body">
+				Some default Some default panel content here. Nulla vitae elit libero, a pharetra augue here. Nulla vitae elit libero, a pharetra augue. Aenean lacinia bibendum nulla sed consectetur.
+			</div>
+		</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="historyFormModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				<h4 class="modal-title">기록 등록</h4>
+			</div>
+			<div class="modal-body" style="min-height: 370px;">
+				<div>
+					<div class="col-md-6 col-xs-12">
+						<div class="form-group form-animate-text">
+							<select class='form-control' id="historyType" name="historyType" onchange="chgHistoryType(this.value)">
+								<option value="outgoing">지 출</option>
+								<option value="income">수 입</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-6 col-xs-12">
+						<div class="form-group form-animate-text">
+							<select class='form-control historyCategory' id="outgoing_historyCatagory">
+								<option value="">카테고리</option>
+							</select>
+							<select class='form-control historyCategory' id="income_historyCatagory" style="display: none;">
+								<option value="">카테고리</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div>
+					<div class="col-md-12 col-xs-12">
+						<div class="form-group form-animate-text">
+							<input type="text" class="form-text" id="historyTitle" name="historyTitle" required>
+							<span class="bar"></span>
+							<label>제목</label>
+						</div>
+					</div>
+					<div class="col-md-4 col-xs-12">
+						<div class="form-group form-animate-text">
+							<input type="text" class="form-text mask-date" id="historyDate" name="historyDate" required>
+							<span class="bar"></span>
+							<label>날짜</label>
+						</div>
+					</div>
+					<div class="col-md-8 col-xs-12">
+						<div class="form-group form-animate-text">
+							<input type="text" class="form-text mask-money"  id="historyMoney" name="historyMoney" max="9999999999">
+							<span class="bar"></span>
+							<label>금액(단위 : 원)</label>
+						</div>
+					</div>
+					<div class="col-md-12 col-xs-12">
+						<div class="form-group form-animate-text">
+							<textarea class="form-text" rows="2" cols="10" id="historyMemo" name="historyMemo" style="resize: none;"></textarea>
+							<span class="bar"></span>
+							<label>메모</label>
+						</div>
+					</div>
+					<div id="outgoing_type">
+						<div class="form-animate-radio">
+							<label class="radio">
+								<input type="radio" name="outgoingType" value="1"/>
+								<span class="outer">
+									<span class="inner"></span>
+								</span> 현금/체크카드
+							</label>
+							<label class="radio">
+								<input type="radio" name="outgoingType" value="0"/>
+								<span class="outer">
+									<span class="inner"></span>
+								</span> 신용카드
+							</label>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="regHistory();">등록</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal">닫기</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div>
+
+
+<script type="text/javascript">
+$(function(){
+	$('.mask-date').mask('0000-00-00');
+	$('.mask-money').mask("#,##0", {reverse: true});
+	
+	calViewName = "month";
+	calDate = convertDate(new Date());
+	
+	callData();
+	setSelectBox();
+	
+	$("#historyFormModal").on("hidden.bs.modal", function() {
+		resetModalValue();
+	});
+});
+
+function delHistory(btn) {
+	var idx = $(btn).attr("hIdx");
+	var type = $(btn).attr("type");
+	$.ajax({
+		url : "/delHistory/"+type+"/"+idx,
+		type : "DELETE",
+		success : function(data){
+			callData(null, true);
+			alert("성공적으로 삭제하였습니다.");
+		},
+		error : function(request,status,error){
+			if(request.status==401) {
+				alert("로그인이 필요한 페이지입니다.");
+				location.href="/";
+			} else {
+				alert(request.status);
+				alert(request.responseText);
+				/* alert(request.responseText); */
+				/* location.href="/"; */
+			}
+		}
+	});
+}
+</script>

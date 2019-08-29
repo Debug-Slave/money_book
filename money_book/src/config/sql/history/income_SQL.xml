@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="incomeMapper">
+	
+	<resultMap id="incomeVO" type="com.debugslave.moneybook.module.history.HistoryVO">
+		<result property="hIdx" column="h_idx"/>
+		<result property="userIdx" column="user_idx"/>
+		<result property="hisTitle" column="his_title"/>
+		<result property="hisType" column="his_type"/>
+		<result property="hisMoney" column="his_money"/>
+		<result property="cateCode" column="cate_code"/>
+		<result property="cateName" column="cate_name"/>
+		<result property="hisMemo" column="his_memo"/>
+		<result property="regDt" column="reg_date"/>
+		<result property="hisDate" column="his_date"/>
+	</resultMap>
+	
+	
+	<insert id="insertIncomeHistory" parameterType="historyVO">
+		INSERT INTO tb_income 
+			(h_idx, user_idx, his_title, his_money, his_memo,
+			 his_stat, his_date, reg_date, cate_code)
+		VALUES (#{hIdx}, #{userIdx}, #{hisTitle}, #{hisMoney}, #{hisMemo},
+			1, #{hisDate}, NOW(), #{cateCode})
+	</insert>
+	
+	<update id="deleteIncomeHistory" parameterType="historyVO">
+		UPDATE tb_income 
+		SET 
+			his_stat = 0
+		WHERE 
+			h_idx = #{hIdx}
+	</update>
+	
+	<select id="selectIncomeHistoryList" resultType="hashMap" parameterType="hashMap">
+		SELECT 
+			h_idx AS id, FORMAT(his_money, '#,##0') AS title, DATE_FORMAT(his_date, '%Y-%m-%d') AS start
+		FROM tb_income 
+		WHERE 
+			user_idx = #{userIdx}
+			AND his_stat = 1
+			AND his_date BETWEEN #{startDate} AND #{endDate}
+		ORDER BY 
+			h_idx ASC
+	</select>
+	
+	<select id="selectIncomeHistoryInfo" resultMap="incomeVO" parameterType="historyVO">
+		SELECT
+			i.h_idx, i.user_idx, i.his_title, i.his_money, i.his_memo, i.his_stat, 
+			i.his_date, i.reg_date, i.cate_code, c.cate_name
+		FROM 
+			(
+				SELECT 
+					h_idx, user_idx, his_title, his_money, his_memo, his_stat, his_date, reg_date, cate_code
+				FROM 
+					tb_income
+				WHERE
+					h_idx = #{hIdx}
+					AND user_idx = #{userIdx}
+					AND his_stat = 1
+			) i,
+			tb_income_category c
+		WHERE
+			i.cate_code = c.cate_code
+	</select>
+	
+</mapper>

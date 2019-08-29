@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="outgoingMapper">
+	
+	<resultMap id="outgoingVO" type="com.debugslave.moneybook.module.history.HistoryVO">
+		<result property="hIdx" column="h_idx"/>
+		<result property="userIdx" column="user_idx"/>
+		<result property="hisTitle" column="his_title"/>
+		<result property="hisType" column="his_type"/>
+		<result property="hisMoney" column="his_money"/>
+		<result property="cateCode" column="cate_code"/>
+		<result property="cateName" column="cate_name"/>
+		<result property="hisMemo" column="his_memo"/>
+		<result property="regDt" column="reg_date"/>
+		<result property="hisDate" column="his_date"/>
+		<result property="hisType" column="his_type"/>
+	</resultMap>
+	
+	
+	<insert id="insertOutgoingHistory" parameterType="historyVO">
+		INSERT INTO tb_outgoing 
+			(h_idx, user_idx, his_title, his_money, his_memo,
+			 his_stat, his_date, reg_date, cate_code, his_type)
+		VALUES (#{hIdx}, #{userIdx}, #{hisTitle}, #{hisMoney}, #{hisMemo},
+			1, #{hisDate}, NOW(), #{cateCode}, #{hisType})
+	</insert>
+	
+	<update id="deleteOutgoingHistory" parameterType="historyVO">
+		UPDATE tb_outgoing 
+		SET 
+			his_stat = 0
+		WHERE 
+			h_idx = #{hIdx}
+	</update>
+	
+	<select id="selectOutgoingHistoryList"  resultType="hashMap" parameterType="hashMap">
+		SELECT 
+			h_idx AS id, FORMAT(his_money, '#,##0') AS title, DATE_FORMAT(his_date, '%Y-%m-%d') AS start
+		FROM tb_outgoing 
+		WHERE 
+			user_idx = #{userIdx}
+			AND his_stat = 1
+			AND his_date BETWEEN #{startDate} AND #{endDate}
+		ORDER BY 
+			h_idx ASC
+	</select>
+	
+	<select id="selectOutgoingHistoryInfo" resultMap="outgoingVO" parameterType="historyVO">
+		SELECT
+			o.h_idx, o.user_idx, o.his_title, o.his_money, o.his_memo, o.his_stat, 
+			o.his_date, o.reg_date, o.cate_code, c.cate_name, o.his_type
+		FROM 
+			(
+				SELECT 
+					h_idx, user_idx, his_title, his_money, his_memo, his_stat, his_date, reg_date, cate_code, his_type
+				FROM 
+					tb_outgoing
+				WHERE
+					h_idx = #{hIdx}
+					AND user_idx = #{userIdx}
+					AND his_stat = 1
+			) o,
+			tb_outgoing_category c
+		WHERE
+			o.cate_code = c.cate_code
+	</select>
+	
+</mapper>

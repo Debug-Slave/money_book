@@ -1,0 +1,336 @@
+
+<div class="panel">
+	<div class="panel-body">
+		<div class="col-md-12" style="margin-bottom: 25px;">
+			<div class="col-md-4 col-xs-4">
+				<div class="form-group form-animate-text" style="margin: 15px;">
+					<input type="text" class="form-text dateAnimate" id="startDate" required="required">
+					<span class="bar"></span>
+					<label>
+						<span class="fa fa-calendar"></span> 시작일
+					</label>
+				</div>
+			</div>
+			<div class="col-md-1 col-xs-1 icon-wrapper text-center"">
+				<h2>~</h2>
+			</div>
+			<div class="col-md-4 col-xs-4">
+				<div class="form-group form-animate-text" style="margin: 15px;">
+					<input type="text" class="form-text dateAnimate" id="endDate" required="required">
+					<span class="bar"></span>
+					<label>
+						<span class="fa fa-calendar"></span> 마지막일
+					</label>
+				</div>
+			</div>
+			<div class="col-md-3 col-xs-3 icon-wrapper text-center">
+				<button class=" btn btn-round btn-primary" value="primary" style="width: 100%;" onclick="dashboardSearch()">
+					<span class="fa fa-search"></span>
+				</button>
+			</div>
+		</div>
+		
+		<div class="col-md-12">
+			
+			<div class="alert alert-primary col-md-3 col-sm-5 col-xs-12  alert-icon">
+				<div class="col-md-4 col-sm-4 col-xs-12 icon-wrapper text-center">
+					<span class="fa fa-plus-square fa-2x"></span>
+				</div>
+				<div class="col-md-8 col-sm-8  col-xs-12" style="padding-left: 25px;">
+					<p style="font-size: 1.5em; text-align: right;" id="totIncomePanel">0원</p>
+					<p style="text-align: right;">총 수입</p>
+				</div>
+			</div>
+			
+			<div class="alert alert-default col-md-1 col-sm-2 col-xs-12 alert-icon">
+				<div class="col-md-12 col-sm-2 col-xs-12 icon-wrapper text-center" style="border-right: none !important;">
+					<span class="fa fa-minus fa-2x"></span>
+				</div>
+			</div>
+			
+			<div class="alert alert-warning col-md-3 col-sm-5 col-xs-12 alert-icon">
+				<div class="col-md-4 col-sm-4 col-xs-12 icon-wrapper text-center">
+					<span class="fa fa-minus-square fa-2x"></span>
+				</div>
+				<div class="col-md-8 col-sm-8" style="padding-left: 25px;">
+					<p style="font-size: 1.5em; text-align: right;"  id="totOutgoingPanel">0원</p>
+					<p style="text-align: right;">총 지출</p>
+				</div>
+			</div>
+			
+			<div class="alert alert-default col-md-1 col-sm-3 col-xs-12 alert-icon">
+				<div class="col-md-12 col-sm-12 col-xs-12 icon-wrapper text-center" style="border-right: none !important;">
+					<span class="fa fa-chevron-right fa-2x"></span>
+				</div>
+			</div>
+			
+			<div class="alert alert-success col-md-4 col-sm-9 col-xs-12 alert-icon">
+				<div class="col-md-4 col-sm-4 col-xs-12 icon-wrapper text-center">
+					<span class="fa fa-star fa-2x"></span>
+				</div>
+				<div class="col-md-8 col-sm-8" style="padding-left: 25px;">
+					<p style="font-size: 1.5em; text-align: right;" id="totBalancePanel">0원</p>
+					<p style="text-align: right;">잔액</p>
+				</div>
+			</div>
+		</div>
+	</div>                    
+</div>
+
+<div class="col-md-12"> <!-- start outgoing pie -->
+	<div class="panel">
+		<div class="panel-heading bg-white border-none" style="padding: 20px;">
+			<div class="col-sm-12 text-left">
+				<h4 class="animated fadeInLeft">지출 분석</h4>
+			</div>
+		</div>
+		<div class="panel-body" id="outgoingChartPanel">
+			<div class="col-md-12">
+				<div class="col-md-6">
+					<div class="canvas-holder1">
+						<canvas class="pie-chart" style="height:  300px;"></canvas>
+						<p style="text-align: right;">* 검색된 데이터가 없으면 차트가 표시되지 않습니다.</p>
+					</div>
+				</div>
+				
+				<div class="col-md-6"><!-- 카테고리 프로그레스바 -->
+					<div class="col-md-6"> <!-- 카테고리 프로그레스바1 -->
+						<div class="media" id="outgoing_FO_progress">
+							<div class="media-left">
+								<span class="fa fa-cutlery" style="font-size:2em;"></span>
+							</div>
+							<div class="media-body">
+								<h5 class="media-heading">식비</h5>
+								<div class="progress progress-mini">
+									<div class="progress-bar" role="progressbar" 
+										aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
+										data-toggle="tooltip" data-placement="top" data-original-title="">
+									</div>
+								</div>
+							</div>
+						</div>
+	
+						<div class="media" id="outgoing_HS_progress" >
+							<div class="media-left">
+								<span class="fa fa-shopping-cart" style="font-size:2em;"></span>
+							</div>
+							<div class="media-body">
+								<h5 class="media-heading">생활용품</h5>
+								<div class="progress progress-mini">
+									<div class="progress-bar" role="progressbar" 
+										aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
+										data-toggle="tooltip" data-placement="top" data-original-title="">
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="media" id="outgoing_CL_progress" >
+							<div class="media-left">
+								<span class="fa fa-music" style="font-size:2em;"></span>
+							</div>
+							<div class="media-body">
+								<h5 class="media-heading">문화/건강</h5>
+								<div class="progress progress-mini">
+									<div class="progress-bar" role="progressbar" 
+										aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
+										data-toggle="tooltip" data-placement="top" data-original-title="Tooltip on top">
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="media" id="outgoing_TR_progress">
+							<div class="media-left">
+								<span class="fa fa-car" style="font-size:2em;"></span>
+							</div>
+							<div class="media-body">
+								<h5 class="media-heading">교통</h5>
+								<div class="progress progress-mini">
+									<div class="progress-bar" role="progressbar"
+										 aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" 
+										data-toggle="tooltip" data-placement="top" data-original-title="">
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="media" id="outgoing_ED_progress">
+							<div class="media-left">
+								<span class="fa fa-pencil" style="font-size:2em;"></span>
+							</div>
+							<div class="media-body">
+								<h5 class="media-heading">교육</h5>
+								<div class="progress progress-mini">
+									<div class="progress-bar" role="progressbar" 
+										aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" 
+										data-toggle="tooltip" data-placement="top" data-original-title="">
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div>  <!-- 카테고리 프로그레스바1 -->
+					
+					<div class="col-md-5">   <!-- 카테고리 프로그레스바2 -->
+						<div class="media" id="outgoing_EV_progress" >
+							<div class="media-left">
+								<span class="fa fa-gift" style="font-size:2em;"></span>
+							</div>
+							<div class="media-body">
+								<h5 class="media-heading">회비/경조사</h5>
+								<div class="progress progress-mini">
+									<div class="progress-bar" role="progressbar" 
+										aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
+										data-toggle="tooltip" data-placement="top" data-original-title="">
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="media" id="outgoing_CM_progress">
+							<div class="media-left">
+								<span class="fa fa-mobile" style="font-size:2em;"></span>
+							</div>
+							<div class="media-body">
+								<h5 class="media-heading">통신</h5>
+								<div class="progress progress-mini">
+									<div class="progress-bar" role="progressbar" 
+										aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" 
+										data-toggle="tooltip" data-placement="top" data-original-title="Tooltip on top">
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="media" id="outgoing_DE_progress" >
+							<div class="media-left">
+								<span class="fa fa-home" style="font-size:2em;"></span>
+							</div>
+							<div class="media-body">
+								<h5 class="media-heading">주거</h5>
+								<div class="progress progress-mini">
+									<div class="progress-bar" role="progressbar" 
+										aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
+										data-toggle="tooltip" data-placement="top" data-original-title="">
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="media" id="outgoing_TX_progress" >
+							<div class="media-left">
+								<span class="fa fa-copyright" style="font-size:2em;"></span>
+							</div>
+							<div class="media-body">
+								<h5 class="media-heading">세금/이자</h5>
+								<div class="progress progress-mini">
+									<div class="progress-bar" role="progressbar" 
+										aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
+										data-toggle="tooltip" data-placement="top" data-original-title="">
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="media" id="outgoing_ET_progress" >
+							<div class="media-left">
+								<span class="fa fa-puzzle-piece" style="font-size:2em;"></span>
+							</div>
+							<div class="media-body">
+								<h5 class="media-heading">기타</h5>
+								<div class="progress progress-mini">
+									<div class="progress-bar" role="progressbar" 
+										aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
+										data-toggle="tooltip" data-placement="top" data-original-title="">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div><!-- 카테고리 프로그레스바2 -->
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>	<!-- End outgoing pie -->
+
+
+<div class="col-md-12"><!-- start income Bar -->
+	<div class="panel">
+		<div class="panel-heading bg-white border-none" style="padding: 20px; margin-bottom: 20px;">
+			<div class="col-md-12 col-sm-12 col-sm-12 text-left">
+				<h4 class="animated fadeInLeft">수입 분석</h4>
+			</div>
+		</div>
+		<div class="panel-body" id="incomeChartPanel">
+			<div class="col-md-12">
+				<div class="media" id="income_MI_progress" >
+					<div class="media-left">
+						<span class="icon-folder icons" style="font-size:2em;"></span>
+					</div>
+					<div class="media-body">
+						<h5 class="media-heading">주수입</h5>
+						<div class="progress progress-mini">
+							<div class="progress-bar" role="progressbar" 
+								aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
+								data-toggle="tooltip" data-placement="top" data-original-title="0">
+							</div>
+						</div>
+					</div>
+				</div>
+	
+				<div class="media" id="income_SI_progress">
+					<div class="media-left">
+						<span class="icon-pie-chart icons" style="font-size:2em;"></span>
+					</div>
+					<div class="media-body">
+						<h5 class="media-heading">부수입</h5>
+						<div class="progress progress-mini">
+							<div class="progress-bar" role="progressbar" 
+								aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" 
+								data-toggle="tooltip" data-placement="top" data-original-title="0">
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="media" id="income_PM_progress" >
+					<div class="media-left">
+						<span class="icon-energy icons" style="font-size:2em;"></span>
+					</div>
+					<div class="media-body">
+						<h5 class="media-heading">전월이월</h5>
+						<div class="progress progress-mini">
+							<div class="progress-bar" role="progressbar" 
+								aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"
+								data-toggle="tooltip" data-placement="top" data-original-title="0">
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div><!-- end income Bar -->
+
+
+
+
+    
+<script type="text/javascript">
+var today = new Date();
+
+document.getElementById("endDate").value = today.yyyymmdd();
+document.getElementById("startDate").value = new Date(new Date().setMonth(today.getMonth()-1)).yyyymmdd();
+
+
+$(function(){
+	$('.dateAnimate').mask('0000-00-00');
+	$('.dateAnimate').bootstrapMaterialDatePicker({ weekStart : 0, time: false});
+	dashboardSearch();
+});
+
+</script>
+  <!-- end: Javascript -->
